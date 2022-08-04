@@ -9,20 +9,20 @@ Customers,Kanban, Area, Bar, Pie, Financial, ColorPicker, ColorMapping, Editor} 
 
 
 import './App.css';
-
+import { useStateContext } from "./contexts/ContextProvider";
 
 const App = ()=>{
 
-    const activeMenu = true;
+    const {activeMenu, themeSettings, setthemeSettings, currentColor, currentMode} = useStateContext();
 
     return(
-       <div>
+       <div className={currentMode === 'Dark' ?'dark':''}>
         <BrowserRouter>
        <div className="flex relative dark:bg-main-dark-bg"> 
         <div className="fixed right-4 bottom-4" style={{zIndex:'1000'}}>
             <TooltipComponent content="Settings" position="Top">
                 <button type="button" className="text-3xl p-3 hover:drop-shadow-xl
-                 hover:bg-light-gray text-white" style={{background:"blue",borderRadius:"50%"}}>
+                 hover:bg-light-gray text-white" onClick={()=>setthemeSettings(true)} style={{background:currentColor,borderRadius:"50%"}}>
                     <FiSettings />
                 </button>
             </TooltipComponent>
@@ -39,14 +39,16 @@ const App = ()=>{
             ) 
         }
 
-        <div className={`dark:bg-main-bg bg-main-bg min-h-screen w-full ${activeMenu ? 'md:ml-72 '
+        <div className={`dark:bg-main-dark-bg bg-main-bg min-h-screen w-full ${activeMenu ? 'md:ml-72 '
         : 'flex-2'}`}>
                 <div className="fixed md:static bg-main-bg dark:bg-main-dark-bg navbar w-full">
-                   < Navbar />
+                   <Navbar />
                 </div>
-        </div>
+       
        
         <div>
+          {themeSettings && <ThemeSettings /> } 
+     
         <Routes>
             {/* Dashboard */}
             <Route path="/" element={<Ecommerce />}/>
@@ -58,9 +60,9 @@ const App = ()=>{
              <Route path="/customers" element={<Customers />}/>
 
               {/* Apps */}
+              <Route path="/calendar" element={<Calendar />}/>
               <Route path="/kanban" element={<Kanban />}/>
              <Route path="/editor" element={<Editor />}/>
-             <Route path="/calendar" element={<Calendar />}/>
              <Route path="/color-picker" element={<ColorPicker />}/>
 
               {/* Charts */}
@@ -74,7 +76,7 @@ const App = ()=>{
              <Route path="/stacked" element={<Stacked />}/>
            </Routes>     
         </div>
-       
+        </div>
        </div>
        </BrowserRouter>
        </div>
